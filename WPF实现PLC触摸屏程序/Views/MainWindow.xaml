@@ -1,0 +1,113 @@
+﻿<Window
+    x:Class="WPF实现PLC触摸屏程序.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:WPF实现PLC触摸屏程序.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:WPF实现PLC触摸屏程序.ViewModels"
+    Name="mainWindow"
+    Title="MainWindow"
+    Width="800"
+    Height="450"
+    d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+    AllowsTransparency="True"
+    WindowChrome.IsHitTestVisibleInChrome="True"
+    WindowStartupLocation="CenterScreen"
+    WindowState="Maximized"
+    WindowStyle="None"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="60" />
+            <Setter Property="Background" Value="#0d436e" />
+            <Setter Property="Foreground" Value="#ffffff" />
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="Margin" Value="0,0,10,0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="#0d436e"
+                            BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.7" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style
+            x:Key="LastButtonStyle"
+            BasedOn="{StaticResource ButtonStyle}"
+            TargetType="Button">
+            <Setter Property="Margin" Value="0,0,0,0" />
+        </Style>
+    </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding
+            Key="Esc"
+            Command="{Binding CloseWindowCommand}"
+            CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" />
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        
+        <Frame
+            Name="frame1"
+            Content="{Binding CurrentUserControl}"
+            NavigationUIVisibility="Hidden" />
+        
+        <Grid Grid.Row="1" Background="{Binding BackgroundColor}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Button
+                Grid.Column="0"
+                Command="{Binding OpenCommand}"
+                CommandParameter="IndexUserControl"
+                Content="主页面"
+                Style="{StaticResource ButtonStyle}" />
+            <Button
+                Grid.Column="1"
+                Command="{Binding OpenCommand}"
+                CommandParameter="ServerXYUserControl"
+                Content="伺服XY"
+                Style="{StaticResource ButtonStyle}" />
+            <Button
+                Grid.Column="2"
+                Command="{Binding OpenCommand}"
+                CommandParameter="ServerZRUserControl"
+                Content="伺服ZR"
+                Style="{StaticResource ButtonStyle}" />
+            <Button
+                Grid.Column="3"
+                Command="{Binding OpenCommand}"
+                CommandParameter="ServerStateUserControl"
+                Content="伺服状态"
+                Style="{StaticResource ButtonStyle}" />
+            <Button
+                Grid.Column="4"
+                Command="{Binding OpenWindowCommand}"
+                CommandParameter="{Binding ElementName=mainWindow}"
+                Content="待机页"
+                Style="{StaticResource LastButtonStyle}" />
+        </Grid>
+    </Grid>
+</Window>

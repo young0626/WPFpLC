@@ -1,0 +1,340 @@
+﻿<UserControl
+    x:Class="WPF实现PLC触摸屏程序.Views.UserControls.ServerStateUserControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:WPF实现PLC触摸屏程序.Views.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:usercontrols="clr-namespace:WPF实现PLC触摸屏程序.ViewModels.UserControls"
+    d:DataContext="{d:DesignInstance Type=usercontrols:ServerStateViewModel}"
+    d:DesignHeight="750"
+    d:DesignWidth="1200"
+    Background="#8080c0"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="EllipseStyle" TargetType="Ellipse">
+            <Setter Property="Fill" Value="Green" />
+            <Setter Property="Width" Value="25" />
+            <Setter Property="Height" Value="25" />
+        </Style>
+        <Style x:Key="EllipseStyle1" TargetType="Ellipse">
+            <Setter Property="Fill" Value="Gray" />
+            <Setter Property="Width" Value="25" />
+            <Setter Property="Height" Value="25" />
+        </Style>
+
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="Black"
+                            BorderThickness="0"
+                            CornerRadius="2">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.9" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style
+            x:Key="ButtonStyle1"
+            BasedOn="{StaticResource ButtonStyle}"
+            TargetType="Button">
+            <Setter Property="Background" Value="#0d436e" />
+            <Setter Property="Foreground" Value="#ffffff" />
+            <Setter Property="Width" Value="120" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid
+            Grid.Row="0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <TextBlock
+                Padding="0,0,0,20"
+                FontSize="24"
+                Foreground="White"
+                Text="伺服状态页">
+                <TextBlock.TextDecorations>
+                    <TextDecoration
+                        PenOffset="10"
+                        PenOffsetUnit="Pixel"
+                        PenThicknessUnit="Pixel">
+                        <TextDecoration.Pen>
+                            <Pen Thickness="5">
+                                <Pen.Brush>
+                                    <LinearGradientBrush Opacity="0.8" StartPoint="0,0.5" EndPoint="1,0.5">
+                                        <LinearGradientBrush.GradientStops>
+                                            <GradientStop Offset="0" Color="Red" />
+                                            <GradientStop Offset="1" Color="Blue" />
+                                        </LinearGradientBrush.GradientStops>
+                                    </LinearGradientBrush>
+                                </Pen.Brush>
+                                <Pen.DashStyle>
+                                    <DashStyle Dashes="1,2,3" />
+                                </Pen.DashStyle>
+                            </Pen>
+                        </TextDecoration.Pen>
+                    </TextDecoration>
+                </TextBlock.TextDecorations>
+            </TextBlock>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="24"
+                Foreground="#ffffff"
+                Text="X轴" />
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="24"
+                Foreground="#ffffff"
+                Text="Y轴" />
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="3"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="24"
+                Foreground="#ffffff"
+                Text="Z轴" />
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="4"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="24"
+                Foreground="#ffffff"
+                Text="R轴" />
+
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="20"
+                Foreground="#ffffff"
+                Text="故障指示" />
+            <Ellipse
+                Grid.Row="1"
+                Grid.Column="1"
+                Fill="{Binding TroubleXColor}"
+                Style="{StaticResource EllipseStyle}" />
+            <Ellipse
+                Grid.Row="1"
+                Grid.Column="2"
+                Fill="{Binding TroubleYColor}"
+                Style="{StaticResource EllipseStyle}" />
+            <Ellipse
+                Grid.Row="1"
+                Grid.Column="3"
+                Fill="{Binding TroubleZColor}"
+                Style="{StaticResource EllipseStyle}" />
+            <Ellipse
+                Grid.Row="1"
+                Grid.Column="4"
+                Fill="{Binding TroubleRColor}"
+                Style="{StaticResource EllipseStyle}" />
+
+            <Button
+                Grid.Row="2"
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                Command="{Binding TroubleCommand}"
+                CommandParameter="DB8.DBX0.0"
+                Content="故障复位"
+                Style="{StaticResource ButtonStyle1}" />
+            <Button
+                Grid.Row="2"
+                Grid.Column="2"
+                VerticalAlignment="Center"
+                Command="{Binding TroubleCommand}"
+                CommandParameter="DB8.DBX0.1"
+                Content="故障复位"
+                Style="{StaticResource ButtonStyle1}" />
+            <Button
+                Grid.Row="2"
+                Grid.Column="3"
+                VerticalAlignment="Center"
+                Command="{Binding TroubleCommand}"
+                CommandParameter="DB8.DBX0.2"
+                Content="故障复位"
+                Style="{StaticResource ButtonStyle1}" />
+            <Button
+                Grid.Row="2"
+                Grid.Column="4"
+                VerticalAlignment="Center"
+                Command="{Binding TroubleCommand}"
+                CommandParameter="DB8.DBX0.3"
+                Content="故障复位"
+                Style="{StaticResource ButtonStyle1}" />
+
+            <TextBlock
+                Grid.Row="3"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="20"
+                Foreground="#ffffff"
+                Text="上电指示" />
+            <Ellipse
+                Grid.Row="3"
+                Grid.Column="1"
+                Fill="{Binding PowerOnXColor}"
+                Style="{StaticResource EllipseStyle1}" />
+            <Ellipse
+                Grid.Row="3"
+                Grid.Column="2"
+                Fill="{Binding PowerOnYColor}"
+                Style="{StaticResource EllipseStyle1}" />
+            <Ellipse
+                Grid.Row="3"
+                Grid.Column="3"
+                Fill="{Binding PowerOnZColor}"
+                Style="{StaticResource EllipseStyle1}" />
+            <Ellipse
+                Grid.Row="3"
+                Grid.Column="4"
+                Fill="{Binding PowerOnRColor}"
+                Style="{StaticResource EllipseStyle1}" />
+
+            <Button
+                Grid.Row="4"
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                Command="{Binding Command}"
+                CommandParameter="DB9.DBX0.0"
+                Content="上电"
+                Style="{StaticResource ButtonStyle1}" />
+            <Button
+                Grid.Row="4"
+                Grid.Column="2"
+                VerticalAlignment="Center"
+                Command="{Binding Command}"
+                CommandParameter="DB9.DBX0.1"
+                Content="上电"
+                Style="{StaticResource ButtonStyle1}" />
+            <Button
+                Grid.Row="4"
+                Grid.Column="3"
+                VerticalAlignment="Center"
+                Command="{Binding Command}"
+                CommandParameter="DB9.DBX0.2"
+                Content="上电"
+                Style="{StaticResource ButtonStyle1}" />
+            <Button
+                Grid.Row="4"
+                Grid.Column="4"
+                VerticalAlignment="Center"
+                Command="{Binding Command}"
+                CommandParameter="DB9.DBX0.3"
+                Content="上电"
+                Style="{StaticResource ButtonStyle1}" />
+
+            <TextBlock
+                Grid.Row="5"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="20"
+                Foreground="#ffffff"
+                Text="回原指示" />
+            <Ellipse
+                Grid.Row="5"
+                Grid.Column="1"
+                Fill="{Binding RestoreXColor}"
+                Style="{StaticResource EllipseStyle1}" />
+            <Ellipse
+                Grid.Row="5"
+                Grid.Column="2"
+                Fill="{Binding RestoreYColor}"
+                Style="{StaticResource EllipseStyle1}" />
+            <Ellipse
+                Grid.Row="5"
+                Grid.Column="3"
+                Fill="{Binding RestoreZColor}"
+                Style="{StaticResource EllipseStyle1}" />
+            <Ellipse
+                Grid.Row="5"
+                Grid.Column="4"
+                Fill="{Binding RestoreRColor}"
+                Style="{StaticResource EllipseStyle1}" />
+
+            <Button
+                Grid.Row="7"
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                Command="{Binding Command}"
+                CommandParameter="DB8.DBX0.6"
+                Content="回原启动"
+                Style="{StaticResource ButtonStyle1}" />
+            <Button
+                Grid.Row="7"
+                Grid.Column="2"
+                VerticalAlignment="Center"
+                Command="{Binding Command}"
+                CommandParameter="DB8.DBX0.7"
+                Content="回原启动"
+                Style="{StaticResource ButtonStyle1}" />
+            <Button
+                Grid.Row="7"
+                Grid.Column="3"
+                VerticalAlignment="Center"
+                Command="{Binding Command}"
+                CommandParameter="DB8.DBX1.0"
+                Content="回原启动"
+                Style="{StaticResource ButtonStyle1}" />
+            <Button
+                Grid.Row="7"
+                Grid.Column="4"
+                VerticalAlignment="Center"
+                Command="{Binding Command}"
+                CommandParameter="DB8.DBX1.1"
+                Content="回原启动"
+                Style="{StaticResource ButtonStyle1}" />
+        </Grid>
+    </Grid>
+</UserControl>

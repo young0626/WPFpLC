@@ -1,0 +1,912 @@
+﻿<UserControl
+    x:Class="WPF实现PLC触摸屏程序.Views.UserControls.ServerZRUserControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:WPF实现PLC触摸屏程序.Views.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:usercontrols="clr-namespace:WPF实现PLC触摸屏程序.ViewModels.UserControls"
+    d:DataContext="{d:DesignInstance Type=usercontrols:ServerZRViewModel}"
+    d:DesignHeight="750"
+    d:DesignWidth="1200"
+    Background="#8080c0"
+    mc:Ignorable="d">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Unloaded">
+            <i:InvokeCommandAction Command="{Binding UnloadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid
+            Grid.Row="0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <TextBlock
+                FontSize="24"
+                Foreground="White"
+                Text="伺服控制页">
+                <TextBlock.TextDecorations>
+                    <TextDecoration
+                        PenOffset="10"
+                        PenOffsetUnit="Pixel"
+                        PenThicknessUnit="Pixel">
+                        <TextDecoration.Pen>
+                            <Pen Thickness="5">
+                                <Pen.Brush>
+                                    <LinearGradientBrush Opacity="0.8" StartPoint="0,0.5" EndPoint="1,0.5">
+                                        <LinearGradientBrush.GradientStops>
+                                            <GradientStop Offset="0" Color="Red" />
+                                            <GradientStop Offset="1" Color="Blue" />
+                                        </LinearGradientBrush.GradientStops>
+                                    </LinearGradientBrush>
+                                </Pen.Brush>
+                                <Pen.DashStyle>
+                                    <DashStyle Dashes="1,2,3" />
+                                </Pen.DashStyle>
+                            </Pen>
+                        </TextDecoration.Pen>
+                    </TextDecoration>
+                </TextBlock.TextDecorations>
+            </TextBlock>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Grid
+                Grid.Column="0"
+                Margin="0,0,0,30"
+                HorizontalAlignment="Center"
+                ShowGridLines="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5*" />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition Height="1.5*" />
+                    <RowDefinition Height="1.5*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="22"
+                    Foreground="White"
+                    Text="Z轴" />
+
+                <Grid Grid.Row="1" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            Foreground="#ffffff"
+                            Text="当前位置" />
+                        <WrapPanel>
+                            <TextBox
+                                Style="{StaticResource TextBoxStyle1}"
+                                Template="{StaticResource FilletTextBox1}"
+                                Text="{Binding ZaxisModel.CurrentLocation}" />
+                            <TextBlock Style="{StaticResource TextBlockStyle2}" Text="MM" />
+                        </WrapPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1">
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            Foreground="#ffffff"
+                            Text="当前速度" />
+                        <WrapPanel VerticalAlignment="Center">
+                            <TextBox
+                                Style="{StaticResource TextBoxStyle1}"
+                                Template="{StaticResource FilletTextBox1}"
+                                Text="{Binding ZaxisModel.CurrentSpeed}" />
+                            <TextBlock Style="{StaticResource TextBlockStyle2}" Text="MM/S" />
+                        </WrapPanel>
+                    </StackPanel>
+                </Grid>
+
+                <Grid
+                    Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <WrapPanel Grid.Row="0">
+                        <TextBlock Style="{StaticResource TextBlockStyle2}" Text="点动速度" />
+                        <TextBox
+                            Name="zJogSpeed"
+                            Style="{StaticResource TextBoxStyle2}"
+                            Tag="DB9.DBD46"
+                            Template="{StaticResource FilletTextBox2}"
+                            Text="{Binding ZaxisModel.JogSpeed}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding ElementName="zJogSpeed" Path="Tag" />
+                                                    <Binding ElementName="zJogSpeed" Path="Text" />
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                        <TextBlock Style="{StaticResource TextBlockStyle2}" Text="MM/S" />
+                    </WrapPanel>
+
+                    <WrapPanel Grid.Row="1" Margin="0,15,0,0">
+                        <Button Content="向上" Style="{StaticResource ButtonStyle1}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                    <i:InvokeCommandAction Command="{Binding MouseDownCommand}" CommandParameter="DB8.DBX2.0" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding MouseUpCommand}" CommandParameter="DB8.DBX2.0" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                        <Button
+                            Margin="10,0,0,0"
+                            Content="向下"
+                            Style="{StaticResource ButtonStyle1}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                    <i:InvokeCommandAction Command="{Binding MouseDownCommand}" CommandParameter="DB8.DBX2.1" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding MouseUpCommand}" CommandParameter="DB8.DBX2.1" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                    </WrapPanel>
+                </Grid>
+
+                <Grid Grid.Row="3" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0">
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            Foreground="#ffffff"
+                            Text="定位速度" />
+                        <WrapPanel>
+                            <TextBox
+                                Name="zLocalSpeed"
+                                Style="{StaticResource TextBoxStyle2}"
+                                Tag="DB9.DBD50"
+                                Text="{Binding ZaxisModel.LocalSpeed}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                            <i:InvokeCommandAction.CommandParameter>
+                                                <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                    <MultiBinding.Bindings>
+                                                        <Binding ElementName="zLocalSpeed" Path="Tag" />
+                                                        <Binding ElementName="zLocalSpeed" Path="Text" />
+                                                    </MultiBinding.Bindings>
+                                                </MultiBinding>
+                                            </i:InvokeCommandAction.CommandParameter>
+                                        </i:InvokeCommandAction>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <TextBlock Style="{StaticResource TextBlockStyle2}" Text="MM/S" />
+                        </WrapPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="0" Grid.Column="1">
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            Foreground="#ffffff"
+                            Text="定位位置" />
+                        <WrapPanel VerticalAlignment="Center">
+                            <TextBox
+                                Name="zLocation"
+                                Style="{StaticResource TextBoxStyle2}"
+                                Tag="DB8.DBD84"
+                                Template="{StaticResource FilletTextBox2}"
+                                Text="{Binding ZaxisModel.Location}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                            <i:InvokeCommandAction.CommandParameter>
+                                                <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                    <MultiBinding.Bindings>
+                                                        <Binding ElementName="zLocation" Path="Tag" />
+                                                        <Binding ElementName="zLocation" Path="Text" />
+                                                    </MultiBinding.Bindings>
+                                                </MultiBinding>
+                                            </i:InvokeCommandAction.CommandParameter>
+                                        </i:InvokeCommandAction>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <TextBlock Style="{StaticResource TextBlockStyle2}" Text="MM" />
+                        </WrapPanel>
+                    </StackPanel>
+
+                    <WrapPanel
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Margin="0,15,0,0"
+                        HorizontalAlignment="Center">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="#ffffff"
+                            Text="定位控制" />
+                        <Button
+                            Margin="10,0,0,0"
+                            Content="定位启动"
+                            Style="{StaticResource ButtonStyle1}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                    <i:InvokeCommandAction Command="{Binding MouseDownCommand}" CommandParameter="DB8.DBX3.0" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding MouseUpCommand}" CommandParameter="DB8.DBX3.0" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                    </WrapPanel>
+                </Grid>
+
+                <Grid Grid.Row="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <WrapPanel
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource TextBlockStyle1}" Text="取料位" />
+                        <TextBox
+                            Name="zPickupLocation"
+                            Style="{StaticResource TextBoxStyle2}"
+                            Tag="DB9.DBD126"
+                            Template="{StaticResource FilletTextBox2}"
+                            Text="{Binding ZaxisModel.PickupLocation}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding ElementName="zPickupLocation" Path="Tag" />
+                                                    <Binding ElementName="zPickupLocation" Path="Text" />
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                    </WrapPanel>
+
+                    <WrapPanel
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource TextBlockStyle1}" Text="放料位2" />
+                        <TextBox
+                            Name="zMaterialPlacementPosition2"
+                            Style="{StaticResource TextBoxStyle2}"
+                            Tag="DB9.DBD138"
+                            Template="{StaticResource FilletTextBox2}"
+                            Text="{Binding ZaxisModel.MaterialPlacementPosition2}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding ElementName="zMaterialPlacementPosition2" Path="Tag" />
+                                                    <Binding ElementName="zMaterialPlacementPosition2" Path="Text" />
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                    </WrapPanel>
+
+                    <WrapPanel
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource TextBlockStyle1}" Text="拍照位" />
+                        <TextBox
+                            Name="zPhotographyPosition"
+                            Style="{StaticResource TextBoxStyle2}"
+                            Tag="DB9.DBD130"
+                            Template="{StaticResource FilletTextBox2}"
+                            Text="{Binding ZaxisModel.PhotographyPosition}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding ElementName="zPhotographyPosition" Path="Tag" />
+                                                    <Binding ElementName="zPhotographyPosition" Path="Text" />
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                    </WrapPanel>
+
+                    <WrapPanel
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource TextBlockStyle1}" Text="预留位1" />
+                        <TextBox
+                            Name="zReservedPosition1"
+                            Style="{StaticResource TextBoxStyle2}"
+                            Tag="DB9.DBD142"
+                            Template="{StaticResource FilletTextBox2}"
+                            Text="{Binding ZaxisModel.ReservedPosition1}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding ElementName="zReservedPosition1" Path="Tag" />
+                                                    <Binding ElementName="zReservedPosition1" Path="Text" />
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                    </WrapPanel>
+
+                    <WrapPanel
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource TextBlockStyle1}" Text="放料位1" />
+                        <TextBox
+                            Name="zMaterialPlacementPosition1"
+                            Style="{StaticResource TextBoxStyle2}"
+                            Tag="DB9.DBD134"
+                            Template="{StaticResource FilletTextBox2}"
+                            Text="{Binding ZaxisModel.MaterialPlacementPosition1}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding ElementName="zMaterialPlacementPosition1" Path="Tag" />
+                                                    <Binding ElementName="zMaterialPlacementPosition1" Path="Text" />
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                    </WrapPanel>
+
+                    <WrapPanel
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource TextBlockStyle1}" Text="预留位2" />
+                        <TextBox
+                            Name="zReservedPosition2"
+                            Style="{StaticResource TextBoxStyle2}"
+                            Tag="DB9.DBD146"
+                            Template="{StaticResource FilletTextBox2}"
+                            Text="{Binding ZaxisModel.ReservedPosition2}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding ElementName="zReservedPosition2" Path="Tag" />
+                                                    <Binding ElementName="zReservedPosition2" Path="Text" />
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                    </WrapPanel>
+                </Grid>
+            </Grid>
+
+            <Grid
+                Grid.Column="1"
+                Margin="0,0,0,30"
+                HorizontalAlignment="Center"
+                ShowGridLines="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5*" />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition Height="1.5*" />
+                    <RowDefinition Height="1.5*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="22"
+                    Foreground="White"
+                    Text="R轴" />
+
+                <Grid Grid.Row="1" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            Foreground="#ffffff"
+                            Text="当前位置" />
+                        <WrapPanel>
+                            <TextBox
+                                Style="{StaticResource TextBoxStyle1}"
+                                Template="{StaticResource FilletTextBox1}"
+                                Text="{Binding RaxisModel.CurrentLocation}" />
+                            <TextBlock Style="{StaticResource TextBlockStyle2}" Text="MM" />
+                        </WrapPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1">
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            Foreground="#ffffff"
+                            Text="当前速度" />
+                        <WrapPanel VerticalAlignment="Center">
+                            <TextBox
+                                Style="{StaticResource TextBoxStyle1}"
+                                Template="{StaticResource FilletTextBox1}"
+                                Text="{Binding RaxisModel.CurrentSpeed}" />
+                            <TextBlock Style="{StaticResource TextBlockStyle2}" Text="MM/S" />
+                        </WrapPanel>
+                    </StackPanel>
+                </Grid>
+
+                <Grid
+                    Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <WrapPanel Grid.Row="0">
+                        <TextBlock Style="{StaticResource TextBlockStyle2}" Text="点动速度" />
+                        <TextBox
+                            Name="rJogSpeed"
+                            Style="{StaticResource TextBoxStyle2}"
+                            Tag="DB9.DBD54"
+                            Template="{StaticResource FilletTextBox2}"
+                            Text="{Binding RaxisModel.JogSpeed}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding ElementName="rJogSpeed" Path="Tag" />
+                                                    <Binding ElementName="rJogSpeed" Path="Text" />
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                        <TextBlock Style="{StaticResource TextBlockStyle2}" Text="MM/S" />
+                    </WrapPanel>
+
+                    <WrapPanel Grid.Row="1" Margin="0,15,0,0">
+                        <Button Content="顺时针转" Style="{StaticResource ButtonStyle1}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                    <i:InvokeCommandAction Command="{Binding MouseDownCommand}" CommandParameter="DB8.DBX2.2" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding MouseUpCommand}" CommandParameter="DB8.DBX2.2" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                        <Button
+                            Margin="10,0,0,0"
+                            Content="逆时针转"
+                            Style="{StaticResource ButtonStyle1}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                    <i:InvokeCommandAction Command="{Binding MouseDownCommand}" CommandParameter="DB8.DBX2.3" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding MouseUpCommand}" CommandParameter="DB8.DBX2.3" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                    </WrapPanel>
+                </Grid>
+
+                <Grid Grid.Row="3" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0">
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            Foreground="#ffffff"
+                            Text="定位速度" />
+                        <WrapPanel>
+                            <TextBox
+                                Name="rLocalSpeed"
+                                Style="{StaticResource TextBoxStyle2}"
+                                Tag="DB9.DBD58"
+                                Template="{StaticResource FilletTextBox2}"
+                                Text="{Binding RaxisModel.LocalSpeed}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                            <i:InvokeCommandAction.CommandParameter>
+                                                <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                    <MultiBinding.Bindings>
+                                                        <Binding ElementName="rLocalSpeed" Path="Tag" />
+                                                        <Binding ElementName="rLocalSpeed" Path="Text" />
+                                                    </MultiBinding.Bindings>
+                                                </MultiBinding>
+                                            </i:InvokeCommandAction.CommandParameter>
+                                        </i:InvokeCommandAction>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <TextBlock Style="{StaticResource TextBlockStyle2}" Text="MM/S" />
+                        </WrapPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="0" Grid.Column="1">
+                        <TextBlock
+                            Margin="0,0,0,10"
+                            Foreground="#ffffff"
+                            Text="定位位置" />
+                        <WrapPanel VerticalAlignment="Center">
+                            <TextBox
+                                Name="rLocation"
+                                Style="{StaticResource TextBoxStyle2}"
+                                Tag="DB8.DBD96"
+                                Template="{StaticResource FilletTextBox2}"
+                                Text="{Binding RaxisModel.Location}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="GotFocus">
+                                        <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                            <i:InvokeCommandAction.CommandParameter>
+                                                <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                    <MultiBinding.Bindings>
+                                                        <Binding ElementName="rLocation" Path="Tag" />
+                                                        <Binding ElementName="rLocation" Path="Text" />
+                                                    </MultiBinding.Bindings>
+                                                </MultiBinding>
+                                            </i:InvokeCommandAction.CommandParameter>
+                                        </i:InvokeCommandAction>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
+                            <TextBlock Style="{StaticResource TextBlockStyle2}" Text="MM" />
+                        </WrapPanel>
+                    </StackPanel>
+
+                    <WrapPanel
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Margin="0,15,0,0"
+                        HorizontalAlignment="Center">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="#ffffff"
+                            Text="定位控制" />
+                        <Button
+                            Margin="10,0,0,0"
+                            Content="定位启动"
+                            Style="{StaticResource ButtonStyle1}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                    <i:InvokeCommandAction Command="{Binding MouseDownCommand}" CommandParameter="DB8.DBX3.1" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding MouseUpCommand}" CommandParameter="DB8.DBX3.1" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                    </WrapPanel>
+                </Grid>
+
+                <Grid Grid.Row="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <WrapPanel
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource TextBlockStyle1}" Text="取料位" />
+                        <TextBox
+                            Name="rPickupLocation"
+                            Style="{StaticResource TextBoxStyle2}"
+                            Tag="DB9.DBD154"
+                            Template="{StaticResource FilletTextBox2}"
+                            Text="{Binding RaxisModel.PickupLocation}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding ElementName="rPickupLocation" Path="Tag" />
+                                                    <Binding ElementName="rPickupLocation" Path="Text" />
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                    </WrapPanel>
+
+                    <WrapPanel
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource TextBlockStyle1}" Text="放料位2" />
+                        <TextBox
+                            Name="rMaterialPlacementPosition2"
+                            Style="{StaticResource TextBoxStyle2}"
+                            Tag="DB9.DBD166"
+                            Template="{StaticResource FilletTextBox2}"
+                            Text="{Binding RaxisModel.MaterialPlacementPosition2}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding ElementName="rMaterialPlacementPosition2" Path="Tag" />
+                                                    <Binding ElementName="rMaterialPlacementPosition2" Path="Text" />
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                    </WrapPanel>
+
+                    <WrapPanel
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource TextBlockStyle1}" Text="拍照位" />
+                        <TextBox
+                            Name="rPhotographyPosition"
+                            Style="{StaticResource TextBoxStyle2}"
+                            Tag="DB9.DBD158"
+                            Template="{StaticResource FilletTextBox2}"
+                            Text="{Binding RaxisModel.PhotographyPosition}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding ElementName="rPhotographyPosition" Path="Tag" />
+                                                    <Binding ElementName="rPhotographyPosition" Path="Text" />
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                    </WrapPanel>
+
+                    <WrapPanel
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource TextBlockStyle1}" Text="预留位1" />
+                        <TextBox
+                            Name="rReservedPosition1"
+                            Style="{StaticResource TextBoxStyle2}"
+                            Tag="DB9.DBD170"
+                            Template="{StaticResource FilletTextBox2}"
+                            Text="{Binding RaxisModel.ReservedPosition1}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding ElementName="rReservedPosition1" Path="Tag" />
+                                                    <Binding ElementName="rReservedPosition1" Path="Text" />
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                    </WrapPanel>
+
+                    <WrapPanel
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource TextBlockStyle1}" Text="放料位1" />
+                        <TextBox
+                            Name="rMaterialPlacementPosition1"
+                            Style="{StaticResource TextBoxStyle2}"
+                            Tag="DB9.DBD162"
+                            Template="{StaticResource FilletTextBox2}"
+                            Text="{Binding RaxisModel.MaterialPlacementPosition1}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding ElementName="rMaterialPlacementPosition1" Path="Tag" />
+                                                    <Binding ElementName="rMaterialPlacementPosition1" Path="Text" />
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                    </WrapPanel>
+
+                    <WrapPanel
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource TextBlockStyle1}" Text="预留位2" />
+                        <TextBox
+                            Name="rReservedPosition2"
+                            Style="{StaticResource TextBoxStyle2}"
+                            Tag="DB9.DBD174"
+                            Template="{StaticResource FilletTextBox2}"
+                            Text="{Binding RaxisModel.ReservedPosition2}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding GotFocus}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocus}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <MultiBinding.Bindings>
+                                                    <Binding ElementName="rReservedPosition2" Path="Tag" />
+                                                    <Binding ElementName="rReservedPosition2" Path="Text" />
+                                                </MultiBinding.Bindings>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                    </WrapPanel>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

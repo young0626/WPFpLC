@@ -1,0 +1,40 @@
+﻿<Window
+    x:Class="WPF实现PLC触摸屏程序.Views.StartWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:WPF实现PLC触摸屏程序.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:WPF实现PLC触摸屏程序.ViewModels"
+    Name="startWindow"
+    Title="StartWindow"
+    Width="800"
+    Height="450"
+    d:DataContext="{d:DesignInstance Type=viewmodels:StartViewModel}"
+    AllowsTransparency="True"
+    WindowChrome.IsHitTestVisibleInChrome="True"
+    WindowStartupLocation="CenterScreen"
+    WindowState="Maximized"
+    WindowStyle="None"
+    mc:Ignorable="d">
+    <Window.InputBindings>
+        <!--  Gesture="Control+Alt+Q" ===> Modifiers="Control+Alt", Key="Q"  -->
+        <KeyBinding
+            Key="Esc"
+            Command="{Binding CloseWindowCommand}"
+            CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" />
+    </Window.InputBindings>
+    <Grid>
+        <Image
+            Cursor="Hand"
+            Source="/Resources/工业机器人.png"
+            Stretch="Fill">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDown">
+                    <i:InvokeCommandAction Command="{Binding GoMainWindowCommand}" CommandParameter="{Binding ElementName=startWindow}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Image>
+    </Grid>
+</Window>
